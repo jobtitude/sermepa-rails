@@ -16,4 +16,15 @@ module Sermepa
     Digest::SHA1.hexdigest(token)
   end
 
+  def signature_valid?(values, secret = nil)
+    token = ""
+    token += values[:Ds_Amount].to_s
+    token += values[:Ds_Order].to_s
+    token += values[:Ds_MerchantCode].to_s
+    token += values[:Ds_Currency].to_s
+    token += values[:Ds_Response].to_s
+    token += secret || config.secret
+    Digest::SHA1.hexdigest(token).upcase == values[:Ds_Signature]
+  end
+
 end
